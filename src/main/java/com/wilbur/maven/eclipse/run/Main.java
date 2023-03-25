@@ -19,8 +19,7 @@ public class Main {
 		Engine.tell("Version: " + Engine.getVersion());
 		String in = "Look";
 		
-		 // hello from git!
-		// nice to meet you!
+		
 //		TokenWord[] myToks = Engine.sentenceParse(in);
 //		for (int i = 0; i < myToks.length; i++) {
 //			System.out.println(myToks[i].toString());

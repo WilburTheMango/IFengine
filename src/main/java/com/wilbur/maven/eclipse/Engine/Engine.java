@@ -28,6 +28,7 @@ import java.util.*;
 
 public class Engine {
 	
+	private static String gameName = null;
 	private String gamePath;
 	private static String version = "0.01";
 	static File pos = new File("src/main/resources/opennlp-en-ud-ewt-pos-1.0-1.9.3.bin");
@@ -35,7 +36,8 @@ public class Engine {
 	// game variables
 	public static Room currentRoom;
 	public static ArrayList<Item> inventory = new ArrayList<Item>();
-	
+	static JsonNode manifest = null;
+	static String appDir = System.getProperty("user.home")+"/.IFengine/";
 	
 	public Engine(String game) {
 		gamePath = game; 
@@ -176,23 +178,15 @@ public class Engine {
 
 
 	public static Path roomPath(String string) {
-		return Paths.get("src/main/resources/Room-" + string + ".json");
+		return Paths.get(appDir + gameName + "/Room-" + string + ".json");
 	}
 	public static Path itemPath(String string) {
 		return Paths.get("src/main/resources/Item-" + string + ".json");
 	}
 	public static void loadGame(String gameZip) throws IOException {
-		File zip = new File(gameZip);
-		System.out.println(zip.toString());
-		makeAppDir();
-		Files.copy(Paths.get(gameZip), Paths.get(System.getProperty("user.home") + "/.IFengine"));
-	}
-	public static void makeAppDir() {
-		try {
-			Files.createDirectory(Paths.get(System.getProperty("user.home") + "/.IFengine/"));
-		} catch (IOException e) {
-			//do nothing.
-		}
+		StoryParser.extractZip(gameZip);
+		manifest = StoryParser.getJsonNodeFromFile(gameZip, "Manifest.json");
+		
 	}
 	
 //			OLD:	
