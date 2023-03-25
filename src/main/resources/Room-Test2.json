@@ -1,0 +1,8 @@
+{
+  "name": "Test",
+  "description": "a blank empty void of white with a portal back out the mailbox",
+  "items": [ ],
+  "exits": {
+    "s": "src/main/resources/Room-Test.json"
+  }
+}
