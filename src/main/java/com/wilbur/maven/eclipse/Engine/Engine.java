@@ -32,7 +32,7 @@ public class Engine {
 	private String gamePath;
 	private static String version = "0.01";
 	static File pos = new File("src/main/resources/opennlp-en-ud-ewt-pos-1.0-1.9.3.bin");
-	
+	static String unzippedPath;
 	// game variables
 	public static Room currentRoom;
 	public static ArrayList<Item> inventory = new ArrayList<Item>();
@@ -44,7 +44,7 @@ public class Engine {
 	}
 
 	
-	public static void tell(String in) throws InterruptedException {
+	public void tell(String in) throws InterruptedException {
 		for (int i = 0; i < in.length(); i++) {
 			System.out.print(in.charAt(i));
 			Thread.sleep(25);
@@ -58,21 +58,20 @@ public class Engine {
 		return random;	
 	}
 	
-	public static String[] parseTokens(String str) {
+	public String[] parseTokens(String str) {
 		SimpleTokenizer tokenizer = SimpleTokenizer.INSTANCE;
 	    String[] tokens = tokenizer.tokenize(str);
 	    return tokens;
 	}
 	
-	public static String[] parseTags(String[] tokens) {
-		 
+	public String[] parseTags(String[] tokens) {
 	    POSModel model = new POSModelLoader().load(pos);
 	    POSTaggerME tagger = new POSTaggerME(model);  
 	    String[] tags = tagger.tag(tokens);    
 		return tags;
 	}
 
-	public static TokenWord[] sentenceParse(String in) {
+	public TokenWord[] sentenceParse(String in) {
 		String[] tokens = parseTokens(in);
 		String[] tags = parseTags(tokens);
 		TokenWord[] ret1 = new TokenWord[in.length()];
@@ -87,7 +86,7 @@ public class Engine {
 		
 	}
 	
-	public static Room loadRoom(Path roomJson) throws IOException {
+	public Room loadRoom(Path roomJson) throws IOException {
 		// read to string
 		ObjectMapper objectMapper = new ObjectMapper();
 		String roomStr = Files.readString(roomJson);
@@ -109,7 +108,7 @@ public class Engine {
 		return ret;
 	}
 	
-	public static Item loadItem(Path itemJson) throws IOException {
+	public Item loadItem(Path itemJson) throws IOException {
 		Item ret = null;
 		ObjectMapper objectMapper = new ObjectMapper();
 		String itemStr = Files.readString(itemJson);
@@ -131,14 +130,14 @@ public class Engine {
 	}
 	
 	
-	public static String roomToString() {
+	public String roomToString() {
 		// TODO .json get a room elements and use them for the "look" command
 		
 		String roomText = "A large open void of white";
 		return roomText;
 	}
 	
-	public static String getVersion() {
+	public String getVersion() {
 		return version;
 	}
 	public String toString() {
@@ -146,7 +145,7 @@ public class Engine {
 	}
 
 
-	public static void parseCommand(String in) throws InterruptedException {
+	public void parseCommand(String in) throws InterruptedException {
 		// TODO Auto-generated method stub
 		TokenWord[] tokenizedSentence = sentenceParse(in);
 			commandGrab(tokenizedSentence);
@@ -155,7 +154,7 @@ public class Engine {
 	}
 
 
-	private static void commandGrab(TokenWord[] tokenizedSentence) throws InterruptedException {
+	private void commandGrab(TokenWord[] tokenizedSentence) throws InterruptedException {
 		// TODO create all commands
 		
 			if (tokenizedSentence[0].getWord().equals("look")) {
@@ -171,21 +170,22 @@ public class Engine {
 		}
 
 
-	private static void look() throws InterruptedException {
+	private void look() throws InterruptedException {
 		// TODO Auto-generated method stub
 		tell(currentRoom.toString());
 	}
 
 
-	public static Path roomPath(String string) {
+	public Path roomPath(String string) {
 		return Paths.get(appDir + gameName + "/Room-" + string + ".json");
 	}
-	public static Path itemPath(String string) {
+	public Path itemPath(String string) {
 		return Paths.get("src/main/resources/Item-" + string + ".json");
 	}
-	public static void loadGame(String gameZip) throws IOException {
-		StoryParser.extractZip(gameZip);
-		manifest = StoryParser.getJsonNodeFromFile(gameZip, "Manifest.json");
+	public void loadGame(String gameZip) throws IOException {
+		unzippedPath = StoryParser.extractZip(gameZip);
+		System.out.println(unzippedPath);
+		manifest = StoryParser.getJsonNodeFromFile(unzippedPath, "Manifest.json");
 		
 	}
 	

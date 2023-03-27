@@ -39,8 +39,11 @@ public class Main {
 //		Engine.parseCommand(in);
 //		Engine.parseCommand("what");
 //		
+		
+		
+		// hi from github
 		String homies = System.getProperty("user.home");
-		Engine.loadGame("/home/tyler/Desktop/zipityzipzip.zip");
+		theEngine.loadGame("/home/tyler/Desktop/zipityzipzip.zip");
 		
 	}
 	
