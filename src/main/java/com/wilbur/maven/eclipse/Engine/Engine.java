@@ -1,21 +1,14 @@
 package com.wilbur.maven.eclipse.Engine;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wilbur.maven.eclipse.Engine.Character;
 
-import opennlp.tools.cmdline.postag.POSModelLoader;
-import opennlp.tools.postag.POSModel;
-import opennlp.tools.postag.POSTaggerME;
-import opennlp.tools.tokenize.SimpleTokenizer;
 import java.util.*;
 //import java.io.IOException;
 //import com.google.common.collect.ArrayListMultimap;
@@ -65,17 +58,14 @@ public class Engine {
 	
 
 	
-	public Room loadRoom(Path roomJson) throws IOException {
+	public Room loadRoom(String room) throws IOException {
 		// read to string
-		ObjectMapper objectMapper = new ObjectMapper();
-		String roomStr = Files.readString(roomJson);
-		JsonNode roomNode = objectMapper.readTree(roomStr);
+		JsonNode roomNode = StoryParser.getJsonNodeFromFile(unzippedPath, room);
 		ArrayList<Item> inItems = new ArrayList<Item>();
 		for (int i = 0; i < roomNode.get("items").size(); i++) { 
 			//get items
 			//System.out.println(itemLoc);
-			Path itemPath = Paths.get(roomNode.get("items").get(i).asText());
-			inItems.add(loadItem(itemPath));
+			inItems.add(loadItem(roomNode.get("items").get(i).asText()));
 		}
 		System.out.println(inItems);
 		//TODO ADD characters ArrayList<Character>
@@ -83,15 +73,12 @@ public class Engine {
 		//TODO ADD EXITS MAP
 		LinkedHashMap<String, String> exits = new LinkedHashMap<String, String>();
 		Room ret = new Room(roomNode.get("name").asText(), roomNode.get("description").asText(), inItems, characters, exits);
-		currentRoom = ret;
 		return ret;
 	}
 	
-	public Item loadItem(Path itemJson) throws IOException {
+	public Item loadItem(String itemName) throws IOException {
 		Item ret = null;
-		ObjectMapper objectMapper = new ObjectMapper();
-		String itemStr = Files.readString(itemJson);
-		JsonNode itemNode = objectMapper.readTree(itemStr);
+		JsonNode itemNode = StoryParser.getJsonNodeFromFile(unzippedPath, itemName);
 		ArrayList<Item> containing = new ArrayList<Item>();
 		
 		if ((itemNode.get("isContainer").asBoolean())) {	
@@ -99,7 +86,7 @@ public class Engine {
 			for (int i = 0; i < itemNode.get("containing").size(); i++) {
 				String containingPath = itemNode.get("containing").get(i).asText();
 //				System.out.println(containingPath);
-				containing.add(loadItem(Paths.get(containingPath)));
+				containing.add(loadItem(containingPath));
 			}
 		}	
 		// recursive create array of contained obj in Item class, with internal item objects calling this method too... :( sadge recursion
@@ -156,16 +143,27 @@ public class Engine {
 
 
 	public Path roomPath(String string) {
-		return Paths.get(appDir + gameName + "/Room-" + string + ".json");
+		return Paths.get(unzippedPath + "Room-" + string + ".json");
 	}
 	public Path itemPath(String string) {
-		return Paths.get("src/main/resources/Item-" + string + ".json");
+		return Paths.get(unzippedPath + "Item-" + string + ".json");
+	}
+	public Path characterPath(String string) {
+		return Paths.get(unzippedPath + "Character-" + string + ".json");
 	}
 	public void loadGame(String gameZip) throws IOException {
+		//create some more instance variables for the Engine.
 		unzippedPath = StoryParser.extractZip(gameZip);
-		System.out.println(unzippedPath);
 		manifest = StoryParser.getJsonNodeFromFile(unzippedPath, "Manifest.json");
 		// creates a JsonNode with the json of Manifest from a zip.
+		currentRoom = loadRoom(manifest.get("Start").asText());
+		gameLoop();
+	}
+
+
+	private void gameLoop() {
+		//TODO currentRoom.toStringFancy() prompt user, parse command.
+		
 	}
 }
 	

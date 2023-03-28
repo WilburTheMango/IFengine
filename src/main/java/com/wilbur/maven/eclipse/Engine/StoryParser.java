@@ -110,6 +110,33 @@ public class StoryParser {
             return null;
         }
     }
+    public static JsonNode getJsonNodeFromFile(String absPath) {
+        //String filePath = unzippedDir + "/" + filename;
+        try {
+            // Read JSON file into string
+            String fileContent = Files.readString(Paths.get(absPath));
+
+            // Parse JSON string into JsonNode
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(fileContent);
+
+            // Check if the node can be created
+            if (jsonNode == null || jsonNode.isMissingNode()) {
+                System.err.println("Failed to create JsonNode for file: " + absPath);
+                return null;
+            }
+
+            return jsonNode;
+        } catch (JsonParseException e) {
+            System.err.println("Malformed JSON in file: " + absPath);
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            System.err.println("Failed to read file: " + absPath);
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     
 
