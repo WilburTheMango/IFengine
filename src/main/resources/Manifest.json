@@ -14,8 +14,7 @@
       "completed": false
     }
   ],
-  "rooms": ["living_room.json", ""],
+  "rooms": ["Room-Test.json", "Room-Test2.json"],
   "objects": ["Item-Leaflet.json", "Item-Mailbox.json"],
   "characters": null
 }
-

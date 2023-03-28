@@ -16,7 +16,7 @@ import com.wilbur.maven.eclipse.Engine.Character;
 
 public class Main {
 	public static void main(String[] args) throws InterruptedException, IOException {
-		Engine.tell("Version: " + Engine.getVersion());
+		
 		String in = "Look";
 		
 		
@@ -40,11 +40,8 @@ public class Main {
 //		Engine.parseCommand("what");
 //		
 		
-		
-		// hi from github
-		String homies = System.getProperty("user.home");
-		theEngine.loadGame("/home/tyler/Desktop/zipityzipzip.zip");
-		
+		Engine theEngine = new Engine("/home/tyler/Desktop/zipityzipzip.zip");
+		theEngine.tell("Version: " + theEngine.getVersion());
 	}
 	
 	

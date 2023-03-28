@@ -31,7 +31,6 @@ public class Engine {
 	private static String gameName = null;
 	private String gamePath;
 	private static String version = "0.01";
-	static File pos = new File("src/main/resources/opennlp-en-ud-ewt-pos-1.0-1.9.3.bin");
 	static String unzippedPath;
 	// game variables
 	public static Room currentRoom;
@@ -40,7 +39,13 @@ public class Engine {
 	static String appDir = System.getProperty("user.home")+"/.IFengine/";
 	
 	public Engine(String game) {
-		gamePath = game; 
+		gamePath = game;
+		try {
+			loadGame(game);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	
@@ -58,33 +63,7 @@ public class Engine {
 		return random;	
 	}
 	
-	public String[] parseTokens(String str) {
-		SimpleTokenizer tokenizer = SimpleTokenizer.INSTANCE;
-	    String[] tokens = tokenizer.tokenize(str);
-	    return tokens;
-	}
-	
-	public String[] parseTags(String[] tokens) {
-	    POSModel model = new POSModelLoader().load(pos);
-	    POSTaggerME tagger = new POSTaggerME(model);  
-	    String[] tags = tagger.tag(tokens);    
-		return tags;
-	}
 
-	public TokenWord[] sentenceParse(String in) {
-		String[] tokens = parseTokens(in);
-		String[] tags = parseTags(tokens);
-		TokenWord[] ret1 = new TokenWord[in.length()];
-		for (int i = 0; i < tokens.length; i++) {
-//			if (tags[i].equals("PUNCT")) {
-//				break;
-//			}
-			TokenWord word = new TokenWord(tokens[i], tags[i]);
-			ret1[i] = word;
-		}
-		return ret1;
-		
-	}
 	
 	public Room loadRoom(Path roomJson) throws IOException {
 		// read to string
@@ -147,7 +126,7 @@ public class Engine {
 
 	public void parseCommand(String in) throws InterruptedException {
 		// TODO Auto-generated method stub
-		TokenWord[] tokenizedSentence = sentenceParse(in);
+		TokenWord[] tokenizedSentence = SentenceProcessor.sentenceParse(in);
 			commandGrab(tokenizedSentence);
 		// TODO check if leading word is a verb. if it isnt, are its synonyms verbs? if no, dont proceed. 
 		// check leading word synonyms run down the block to catch known commands. then pass in known commands' arguments and manipulate them.
@@ -188,14 +167,13 @@ public class Engine {
 		manifest = StoryParser.getJsonNodeFromFile(unzippedPath, "Manifest.json");
 		
 	}
+	public void loadGame() throws IOException {
+		String unzipDirPath = StoryParser.extractZip(gamePath);
+		System.out.println(unzipDirPath);
+		manifest = StoryParser.getJsonNodeFromFile(unzippedPath, "Manifest.json");
+		//TODO copy above method to this method when it works
+	}
 	
-//			OLD:	
-//	public static String[] chunk(String[] tokens, String [] tags) throws IOException {
-//		File file = new File("src/main/resources/opennlp-en-ud-ewt-pos-1.0-1.9.3.bin");
-//		ChunkerModel chunkerModel = new ChunkerModel(file);  
-//		ChunkerME chunkerME = new ChunkerME(chunkerModel); 
-//		String result[] = chunkerME.chunk(tokens, tags);
-//		return result; 
-//	}
+
 }
 

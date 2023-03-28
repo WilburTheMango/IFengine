@@ -20,7 +20,7 @@ public class TokenWord {
 		// FIXME
 		String[] synonyms = new Index().getDictionaries().getSynonymDictionary().getSynonyms(query);
 		ArrayList<String> ret = new ArrayList<String>();
-		String[] synTags = Engine.parseTags(synonyms);
+		String[] synTags = SentenceProcessor.parseTags(synonyms);
 		
 		for (int i = 0; i < synonyms.length; i++) {
 			if (synTags[i].equals(pos)) {

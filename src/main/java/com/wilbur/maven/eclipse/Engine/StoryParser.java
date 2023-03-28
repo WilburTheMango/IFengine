@@ -1,7 +1,6 @@
 package com.wilbur.maven.eclipse.Engine;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -59,6 +58,7 @@ public class StoryParser {
 	            }
 	        }
 	        zip.close();
+	        System.out.println(unzipDirPath);
 	        return unzipDirPath;
 	    } catch (IOException e) {
 	        e.printStackTrace();
@@ -86,7 +86,7 @@ public class StoryParser {
         String filePath = unzippedDir + "/" + filename;
         try {
             // Read JSON file into string
-            String fileContent = new String(Files.readAllBytes(Paths.get(filePath)), StandardCharsets.UTF_8);
+            String fileContent = new String(Files.readAllBytes(Paths.get(filePath)));
 
             // Parse JSON string into JsonNode
             ObjectMapper objectMapper = new ObjectMapper();
@@ -105,6 +105,7 @@ public class StoryParser {
             return null;
         }
     }
+    
 
 
 }
