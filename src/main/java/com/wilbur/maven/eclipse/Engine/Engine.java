@@ -165,15 +165,10 @@ public class Engine {
 		unzippedPath = StoryParser.extractZip(gameZip);
 		System.out.println(unzippedPath);
 		manifest = StoryParser.getJsonNodeFromFile(unzippedPath, "Manifest.json");
-		
+		// creates a JsonNode with the json of Manifest from a zip.
 	}
-	public void loadGame() throws IOException {
-		String unzipDirPath = StoryParser.extractZip(gamePath);
-		System.out.println(unzipDirPath);
-		manifest = StoryParser.getJsonNodeFromFile(unzippedPath, "Manifest.json");
-		//TODO copy above method to this method when it works
-	}
+}
 	
 
-}
+
 

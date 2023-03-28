@@ -1,8 +1,0 @@
-{
-  "name": "Test",
-  "description": "a blank empty void of white.",
-  "items": ["src/main/resources/Item-Mailbox.json",  "src/main/resources/Item-Leaflet.json"],
-  "exits": {
-    "n": "src/main/resources/Room-Test2.json"
-  }
-}

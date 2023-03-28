@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.zip.*;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -86,7 +87,7 @@ public class StoryParser {
         String filePath = unzippedDir + "/" + filename;
         try {
             // Read JSON file into string
-            String fileContent = new String(Files.readAllBytes(Paths.get(filePath)));
+            String fileContent = Files.readString(Paths.get(filePath));
 
             // Parse JSON string into JsonNode
             ObjectMapper objectMapper = new ObjectMapper();
@@ -99,12 +100,17 @@ public class StoryParser {
             }
 
             return jsonNode;
+        } catch (JsonParseException e) {
+            System.err.println("Malformed JSON in file: " + filename);
+            e.printStackTrace();
+            return null;
         } catch (IOException e) {
             System.err.println("Failed to read file: " + filename);
             e.printStackTrace();
             return null;
         }
     }
+
     
 
 
