@@ -50,7 +50,7 @@ public class Item {
 				+ isLocked + ", isStatic=" + isStatic + ", containedItems=" + containedItems + "]";
 	}
 	public String toStringFancy() {
-		if (isContainer) {
+		if (isContainer == true) {
 			if (isOpen == true) {return itemName + ": " + getItemDesc() + "; " + "Open.";} 
 			else if (isOpen == false) {return itemName + ": " + getItemDesc() + "; " + "Closed."; }
 		} else if (!isContainer) { return itemName + ": " + getItemDesc() + "; "; }

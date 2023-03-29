@@ -30,6 +30,7 @@ public class Engine {
 	public static ArrayList<Item> inventory = new ArrayList<Item>();
 	static JsonNode manifest = null;
 	static String appDir = System.getProperty("user.home")+"/.IFengine/";
+	private String lastCommand = "";
 	
 	public Engine(String game) {
 		gamePath = game;
@@ -42,10 +43,15 @@ public class Engine {
 	}
 
 	
-	public void tell(String in) throws InterruptedException {
+	public void tell(String in) {
 		for (int i = 0; i < in.length(); i++) {
 			System.out.print(in.charAt(i));
-			Thread.sleep(25);
+			try {
+				Thread.sleep(25);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		System.out.println();
 	}
@@ -60,14 +66,14 @@ public class Engine {
 	
 	public Room loadRoom(String room) throws IOException {
 		// read to string
-		JsonNode roomNode = StoryParser.getJsonNodeFromFile(unzippedPath, room);
+		JsonNode roomNode = StoryParser.getJsonNodeFromFile(unzippedPath, roomPath(room));
 		ArrayList<Item> inItems = new ArrayList<Item>();
 		for (int i = 0; i < roomNode.get("items").size(); i++) { 
 			//get items
 			//System.out.println(itemLoc);
 			inItems.add(loadItem(roomNode.get("items").get(i).asText()));
 		}
-		System.out.println(inItems);
+		//System.out.println(inItems);
 		//TODO ADD characters ArrayList<Character>
 		ArrayList<Character> characters = new ArrayList<Character>();
 		//TODO ADD EXITS MAP
@@ -78,7 +84,7 @@ public class Engine {
 	
 	public Item loadItem(String itemName) throws IOException {
 		Item ret = null;
-		JsonNode itemNode = StoryParser.getJsonNodeFromFile(unzippedPath, itemName);
+		JsonNode itemNode = StoryParser.getJsonNodeFromFile(unzippedPath, itemPath(itemName));
 		ArrayList<Item> containing = new ArrayList<Item>();
 		
 		if ((itemNode.get("isContainer").asBoolean())) {	
@@ -111,10 +117,15 @@ public class Engine {
 	}
 
 
-	public void parseCommand(String in) throws InterruptedException {
+	public void parseCommand(String in) {
 		// TODO Auto-generated method stub
 		TokenWord[] tokenizedSentence = SentenceProcessor.sentenceParse(in);
-			commandGrab(tokenizedSentence);
+			try {
+				commandGrab(tokenizedSentence);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		// TODO check if leading word is a verb. if it isnt, are its synonyms verbs? if no, dont proceed. 
 		// check leading word synonyms run down the block to catch known commands. then pass in known commands' arguments and manipulate them.
 	}
@@ -138,18 +149,19 @@ public class Engine {
 
 	private void look() throws InterruptedException {
 		// TODO Auto-generated method stub
-		tell(currentRoom.toString());
+		tell(currentRoom.toStringFancy());
+		gameLoop();
 	}
 
 
-	public Path roomPath(String string) {
-		return Paths.get(unzippedPath + "Room-" + string + ".json");
+	public String roomPath(String string) {
+		return "/Room-" + string + ".json";
 	}
-	public Path itemPath(String string) {
-		return Paths.get(unzippedPath + "Item-" + string + ".json");
+	public String itemPath(String string) {
+		return "/Item-" + string + ".json";
 	}
-	public Path characterPath(String string) {
-		return Paths.get(unzippedPath + "Character-" + string + ".json");
+	public String characterPath(String string) {
+		return "/Character-" + string + ".json";
 	}
 	public void loadGame(String gameZip) throws IOException {
 		//create some more instance variables for the Engine.
@@ -162,8 +174,11 @@ public class Engine {
 
 
 	private void gameLoop() {
-		//TODO currentRoom.toStringFancy() prompt user, parse command.
-		
+		//TODO currentRoom.toStringFancy() prompt user, parse command. do events, loop again.
+		Scanner scan = new Scanner(System.in);
+		System.out.print("> ");
+		String inText = scan.nextLine();
+		parseCommand(inText);
 	}
 }
 	

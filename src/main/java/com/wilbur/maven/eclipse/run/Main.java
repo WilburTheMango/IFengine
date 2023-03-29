@@ -41,7 +41,7 @@ public class Main {
 //		
 		
 		Engine theEngine = new Engine("/home/tyler/Desktop/zipityzipzip.zip");
-		theEngine.tell("Version: " + theEngine.getVersion());
+		
 	}
 	
 	

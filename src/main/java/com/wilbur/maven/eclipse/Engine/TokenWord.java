@@ -25,7 +25,7 @@ public class TokenWord {
 		for (int i = 0; i < synonyms.length; i++) {
 			if (synTags[i].equals(pos)) {
 				ret.add(synonyms[i]);
-				System.out.println(synTags[i]);
+				//System.out.println(synTags[i]);
 			}
 		}
 		return ret;

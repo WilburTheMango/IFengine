@@ -22,8 +22,8 @@ import java.util.LinkedHashMap;
 public class Room {
 	public String roomName;
 	public String roomDesc;
-	public static ArrayList<Item> Items = new ArrayList<Item>();
-	public static ArrayList<Character> Characters = new ArrayList<Character>();
+	public ArrayList<Item> Items = new ArrayList<Item>();
+	public ArrayList<Character> Characters = new ArrayList<Character>();
 	LinkedHashMap<String, String> exits = new LinkedHashMap<String, String>();
 	
 	
@@ -32,8 +32,11 @@ public class Room {
 		
 		this.roomName = roomName;
 		this.roomDesc = roomDesc;
-		//this.Characters = GET CHARACTERS, linking to PATHS
-		//this.Exits = n,ne,e,se,s,sw,w,nw,up,down,secret, linking to PATHS
+		this.Items = Items;
+		this.Characters = Characters;
+		this.exits = Exits;
+		
+		// ADD THE DAMN ITEMS AND CHARACTERS AND EXITS ARRAY
 	}
 	public String getItemsFancy() {
 		String itemsInRoom = "";
@@ -42,10 +45,7 @@ public class Room {
 		}
 		return itemsInRoom;
 	}
-	public String toString() {
-		
-		return roomName + "\n\n" + roomDesc + "\n\n" + "Here is a: \n" + getItemsFancy();
-	}
+	
 	public String getRoomName() {
 		return roomName;
 	}
@@ -61,13 +61,13 @@ public class Room {
 	public ArrayList<Item> getItems() {
 		return Items;
 	}
-	public static void setItems(ArrayList<Item> items) {
+	public void setItems(ArrayList<Item> items) {
 		Items = items;
 	}
-	public static ArrayList<Character> getCharacters() {
+	public ArrayList<Character> getCharacters() {
 		return Characters;
 	}
-	public static void setCharacters(ArrayList<Character> characters) {
+	public void setCharacters(ArrayList<Character> characters) {
 		Characters = characters;
 	}
 	public LinkedHashMap<String, String> getExits() {
@@ -75,5 +75,9 @@ public class Room {
 	}
 	public void setExits(LinkedHashMap<String, String> exits) {
 		this.exits = exits;
+	}
+	public String toStringFancy() {
+		// The formatting for a room being put to console (window later...)
+		return roomName + "\n\n" + roomDesc + "\n\n" + "Here is a: \n" + getItemsFancy();
 	}
 }
