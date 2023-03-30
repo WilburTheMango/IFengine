@@ -41,8 +41,9 @@ public class Room {
 		for (int i = 0; i < Items.size(); i++) {
 			if (i == Items.size() - 1 || Items.size() == 1) {
 				itemsInRoom = Items.get(i).toStringFancy();
+			} else {
+				itemsInRoom = Items.get(i).toStringFancy() + ", ";
 			}
-			itemsInRoom = Items.get(i).toStringFancy() + ", ";
 		}
 		return itemsInRoom;
 	}
@@ -84,22 +85,27 @@ public class Room {
 	public Item getItem(String item) {
 		// return item by name or else return null
 		for (int i = 0; i < Items.size(); i++) {
-			if (Items.get(i).getItemName().toLowerCase().equals(item)) {
-				return Items.get(i);
-			} else {
-				return null;
+			for (int j = 0; j < Items.get(i).getContainedItems().size(); j++) {
+				if (item.equals(Items.get(i).getItemName().toLowerCase())) {
+					return Items.get(i);
+				} if (item.equals(Items.get(i).getContainedItem(item).getItemName().toLowerCase())) {
+					return Items.get(i).getContainedItem(item);
+				}
 			}
-		}
+		}	
 		return null;
-		
 	}
 	public void removeItem(String item) {
 		// completely remove an item from the array of items.
 		for (int i = 0; i < Items.size(); i++) {
-			if (Items.get(i).getItemName().toLowerCase().equals(item)) {
-				Items.remove(i);
+			for (int j = 0; j < Items.get(i).getContainedItems().size(); j++) {
+				if (item.equals(Items.get(i).getItemName().toLowerCase())) {
+					Items.remove(i);
+				} if (item.equals(Items.get(i).getContainedItem(item).getItemName().toLowerCase())) {
+					Items.get(i).removeContainedItem(item);
+				}
 			}
-		}
+		}	
 	}
 	public void open(String item) {
 		// TODO Auto-generated method stub

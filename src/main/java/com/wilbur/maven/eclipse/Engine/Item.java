@@ -51,7 +51,7 @@ public class Item {
 	}
 	public String toStringFancy() {
 		if (isContainer == true) {
-			if (isOpen == true) {return itemName + ": " + getItemDesc() + "; " + "Open." + "\n Inside is a: " + getContainedItemsFancy();} 
+			if (isOpen == true && containedItems.size() > 0) {return itemName + ": " + getItemDesc() + "; " + "Open." + "\n Inside is a: " + getContainedItemsFancy();} 
 			else if (isOpen == false) {return itemName + ": " + getItemDesc() + "; " + "Closed."; }
 		} else if (!isContainer) { return itemName + ": " + getItemDesc() + "; "; }
 		return itemName + ": " + itemDesc;
@@ -120,6 +120,21 @@ public class Item {
 			}
 		}
 		return ret;
+	}
+	public Item getContainedItem(String item) {
+		for (int i = 0; i < containedItems.size(); i++) {
+			if (item.equals(containedItems.get(i).getItemName().toLowerCase())) {
+				return containedItems.get(i);
+			}
+		}
+		return null;
+	}
+	public void removeContainedItem(String item) {
+		for (int i = 0; i < containedItems.size(); i++) {
+			if (item.equals(containedItems.get(i).getItemName().toLowerCase())) {
+				containedItems.remove(i);
+			}
+		}
 	}
 	
 

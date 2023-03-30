@@ -142,6 +142,7 @@ public class Engine {
 				take(tokenizedSentence[1].getWord().toLowerCase());
 			} else if (tokenizedSentence[0].getWord().equals("examine")) {
 				System.out.println("examine invoked");
+				examine(tokenizedSentence[1].getWord().toLowerCase());
 			} else if (tokenizedSentence[0].getWord().equals("say")) {
 				System.out.println("say invoked");
 			} else if (tokenizedSentence[0].getWord().equals("inventory")) {
@@ -151,6 +152,39 @@ public class Engine {
 				open(tokenizedSentence[1].getWord().toLowerCase());
 			}
 		}
+
+
+	private void examine(String item) {
+		// tell examineText
+		if (currentRoom.getItem(item) != null) {
+			tell(currentRoom.getItem(item).getItemExamine());
+		} else if (inventoryHas(item)) {
+			tell(inventoryFetch(item).getItemExamine());
+		} else {
+			tell("I don't see that here.");
+		}
+		gameLoop();
+	}
+
+
+	private Item inventoryFetch(String item) {
+			for (int i = 0; i < inventory.size(); i++) {
+				if (inventory.get(i).getItemName().toLowerCase().equals(item)) {
+					return inventory.get(i);
+				}
+			}
+		return null;
+	}
+
+
+	private boolean inventoryHas(String item) {
+		for (int i = 0; i < inventory.size(); i++) {
+			if (inventory.get(i).getItemName().toLowerCase().equals(item)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 
 	private void open(String item) {
@@ -174,12 +208,20 @@ public class Engine {
 
 	private void take(String item) {
 		// TODO Auto-generated method stub
-		if (currentRoom.getItem(item).isStatic() == false) {
-			inventory.add(currentRoom.getItem(item));
-			currentRoom.removeItem(item);
-			tell ("Taken " + item + ".");
-		} else {
-			tell("That is sturdily affixed in place!");
+		Item target = currentRoom.getItem(item);
+		if (target != null) {
+			if (target.isStatic() == false) {
+				inventory.add(target);
+				currentRoom.removeItem(item);
+				
+				// TODO code to iterate contained items TOO!
+				tell ("Taken " + item + ".");
+			} else {
+				tell("That is sturdily affixed in place!");
+			}
+			
+		} else if (currentRoom.getItem(item) == null) {
+			tell("I do not see a " + item + " here.");
 		}
 		gameLoop();
 	}
