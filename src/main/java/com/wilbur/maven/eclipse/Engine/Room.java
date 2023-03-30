@@ -35,12 +35,13 @@ public class Room {
 		this.Items = Items;
 		this.Characters = Characters;
 		this.exits = Exits;
-		
-		// ADD THE DAMN ITEMS AND CHARACTERS AND EXITS ARRAY
 	}
 	public String getItemsFancy() {
 		String itemsInRoom = "";
 		for (int i = 0; i < Items.size(); i++) {
+			if (i == Items.size() - 1 || Items.size() == 1) {
+				itemsInRoom = Items.get(i).toStringFancy();
+			}
 			itemsInRoom = Items.get(i).toStringFancy() + ", ";
 		}
 		return itemsInRoom;
@@ -79,5 +80,33 @@ public class Room {
 	public String toStringFancy() {
 		// The formatting for a room being put to console (window later...)
 		return roomName + "\n\n" + roomDesc + "\n\n" + "Here is a: \n" + getItemsFancy();
+	}
+	public Item getItem(String item) {
+		// return item by name or else return null
+		for (int i = 0; i < Items.size(); i++) {
+			if (Items.get(i).getItemName().toLowerCase().equals(item)) {
+				return Items.get(i);
+			} else {
+				return null;
+			}
+		}
+		return null;
+		
+	}
+	public void removeItem(String item) {
+		// completely remove an item from the array of items.
+		for (int i = 0; i < Items.size(); i++) {
+			if (Items.get(i).getItemName().toLowerCase().equals(item)) {
+				Items.remove(i);
+			}
+		}
+	}
+	public void open(String item) {
+		// TODO Auto-generated method stub
+		for (int i = 0; i < Items.size(); i++) {
+			if (Items.get(i).getItemName().toLowerCase().equals(item)) {
+				Items.get(i).setOpen(true);
+			}
+		}
 	}
 }

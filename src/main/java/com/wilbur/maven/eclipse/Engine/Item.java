@@ -51,7 +51,7 @@ public class Item {
 	}
 	public String toStringFancy() {
 		if (isContainer == true) {
-			if (isOpen == true) {return itemName + ": " + getItemDesc() + "; " + "Open.";} 
+			if (isOpen == true) {return itemName + ": " + getItemDesc() + "; " + "Open." + "\n Inside is a: " + getContainedItemsFancy();} 
 			else if (isOpen == false) {return itemName + ": " + getItemDesc() + "; " + "Closed."; }
 		} else if (!isContainer) { return itemName + ": " + getItemDesc() + "; "; }
 		return itemName + ": " + itemDesc;
@@ -109,6 +109,17 @@ public class Item {
 	}
 	public void setContainedItems(ArrayList<Item> containedItems) {
 		this.containedItems = containedItems;
+	}
+	public String getContainedItemsFancy() {
+		String ret = "";
+		for (int i = 0; i < containedItems.size(); i++) {
+			if (i == containedItems.size() || i == 1) {
+				ret += containedItems.get(i).getItemName() + ".";
+			} else {
+				ret += containedItems.get(i).getItemName() + ", ";
+			}
+		}
+		return ret;
 	}
 	
 

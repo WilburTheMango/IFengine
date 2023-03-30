@@ -139,12 +139,50 @@ public class Engine {
 				look();
 			} else if (tokenizedSentence[0].getWord().equals("take")) {
 				System.out.println("take invoked");
+				take(tokenizedSentence[1].getWord().toLowerCase());
 			} else if (tokenizedSentence[0].getWord().equals("examine")) {
 				System.out.println("examine invoked");
 			} else if (tokenizedSentence[0].getWord().equals("say")) {
 				System.out.println("say invoked");
+			} else if (tokenizedSentence[0].getWord().equals("inventory")) {
+				System.out.println(inventory);
+				gameLoop();
+			} else if (tokenizedSentence[0].getWord().equals("open")) {
+				open(tokenizedSentence[1].getWord().toLowerCase());
 			}
 		}
+
+
+	private void open(String item) {
+		// TODO Auto-generated method stub
+		if (currentRoom.getItem(item).isContainer() == true && currentRoom.getItem(item).isLocked() == false && currentRoom.getItem(item).isOpen() == false) {
+			currentRoom.open(item);
+			tell("Opened " + item + ".");
+			gameLoop();
+		} else if (currentRoom.getItem(item).isContainer() == true && currentRoom.getItem(item).isLocked() == true && currentRoom.getItem(item).isOpen() == false) {
+			tell("It is locked.");
+			gameLoop();
+		} else if (currentRoom.getItem(item).isContainer() && currentRoom.getItem(item).isOpen() == true) {
+			tell("You want to open an already open " + item + "?");
+			gameLoop();
+		} else if (currentRoom.getItem(item).isContainer() == false) {
+			tell("You can't open this " + item + ".");
+			gameLoop();
+		}
+	}
+
+
+	private void take(String item) {
+		// TODO Auto-generated method stub
+		if (currentRoom.getItem(item).isStatic() == false) {
+			inventory.add(currentRoom.getItem(item));
+			currentRoom.removeItem(item);
+			tell ("Taken " + item + ".");
+		} else {
+			tell("That is sturdily affixed in place!");
+		}
+		gameLoop();
+	}
 
 
 	private void look() throws InterruptedException {
