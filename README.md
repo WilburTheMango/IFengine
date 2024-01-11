@@ -1,2 +1,2 @@
 # IFengine
-a very VERY VERY in progress interactive fiction engine, subject to many refactors, many changes, and MANY re-writes
+An idea for a Interactive Fiction that would ideally be able to interperet other engine languages and handle Natural Language Processing through Apache's OpenNLP.
